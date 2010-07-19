@@ -2,6 +2,7 @@ package cern.ess.opclib;
 
 public interface OpcApi 
 {
+	public void init(String host, String server) throws OPCException;
 	public String[] getItemNames() throws OPCException;
 	public String[] getLocalServerList() throws OPCException;
 	public boolean readBoolean(String item) throws OPCException;

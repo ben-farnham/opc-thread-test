@@ -17,11 +17,13 @@ class MockOpcApiImpl implements OpcApi
 	private String[] localServerList;
 	private List<String> requestedItems;
 	private final Map<String, Object> opcItemValues;
+	private int initCalledCount;
 	
 	public MockOpcApiImpl()
 	{
 		requestedItems = new ArrayList<String>();
-		this.opcItemValues = new HashMap<String, Object>(); 
+		this.opcItemValues = new HashMap<String, Object>();
+		initCalledCount = 0;
 	}
 	
 	public void setLocalServerList(String[] serverList) 
@@ -121,5 +123,16 @@ class MockOpcApiImpl implements OpcApi
 		}
 		
 		opcItemValues.put(opcItemAddress, value);
+	}
+
+	@Override
+	public void init(String host, String server) throws OPCException 
+	{
+		initCalledCount++;
+	}
+	
+	public int getNumberOfTimesInitWasCalled()
+	{
+		return initCalledCount;
 	}
 }

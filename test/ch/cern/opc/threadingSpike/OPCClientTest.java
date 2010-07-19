@@ -206,9 +206,9 @@ public class OPCClientTest
 		opcItemValues.put("opc.item.float.2", (float)2.0);
 		opcItemValues.put("opc.item.float.3", (float)3.0);
 		
-		testee.writeFloat("opc.item.float.1", (float)101.0, "some float type");
-		testee.writeFloat("opc.item.float.2", (float)102.0, "some float type");
-		testee.writeFloat("opc.item.float.3", (float)103.0, "some float type");
+		testee.writeFloat("opc.item.float.1", "some float type", (float)101.0);
+		testee.writeFloat("opc.item.float.2", "some float type", (float)102.0);
+		testee.writeFloat("opc.item.float.3", "some float type", (float)103.0);
 		
 		float f1 = ((Float) opcItemValues.get("opc.item.float.1")).floatValue();
 		assertEquals((float)101.0, f1, 0.001);
@@ -228,9 +228,9 @@ public class OPCClientTest
 		opcItemValues.put("opc.item.int.2", 2);
 		opcItemValues.put("opc.item.int.3", 3);
 		
-		testee.writeInt("opc.item.int.1", 101, "some int type");
-		testee.writeInt("opc.item.int.2", 102, "some int type");
-		testee.writeInt("opc.item.int.3", 103, "some int type");
+		testee.writeInt("opc.item.int.1", "some int type", 101);
+		testee.writeInt("opc.item.int.2", "some int type", 102);
+		testee.writeInt("opc.item.int.3", "some int type", 103);
 
 		assertEquals(101, ((Integer) opcItemValues.get("opc.item.int.1")).intValue());
 		assertEquals(102, ((Integer) opcItemValues.get("opc.item.int.2")).intValue());
@@ -253,5 +253,17 @@ public class OPCClientTest
 		assertEquals("b", opcItemValues.get("opc.item.string.2"));
 		assertEquals("c", opcItemValues.get("opc.item.string.3"));
 		}
+	
+	@Test
+	public void testFirstInitCommandCallsInit()
+	{
+		assertEquals(0, mockOpcApi.getNumberOfTimesInitWasCalled());
+		
+		testee.init("host", "server");
+		assertEquals(1, mockOpcApi.getNumberOfTimesInitWasCalled());
+		
+		testee.init("another host", "another server");
+		assertEquals(1, mockOpcApi.getNumberOfTimesInitWasCalled());
+	}
 
 }

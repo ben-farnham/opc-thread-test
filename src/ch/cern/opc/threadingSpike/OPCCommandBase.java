@@ -95,4 +95,10 @@ public abstract class OPCCommandBase implements OPCCommand
 	    String fullyQualifiedName = this.getClass().getName();
 	    return fullyQualifiedName.substring(fullyQualifiedName.lastIndexOf('.')+1);
 	}
+	
+	@Override
+	public boolean isInitCommand() 
+	{
+		return false;
+	}
 }

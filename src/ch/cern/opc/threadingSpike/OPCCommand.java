@@ -20,4 +20,6 @@ public interface OPCCommand
 	public Object scheduleAndWaitForResponse();
 	
 	public String getCommandName();
+	
+	public boolean isInitCommand();
 }

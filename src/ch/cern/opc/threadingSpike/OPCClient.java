@@ -11,8 +11,8 @@ import java.util.concurrent.TimeoutException;
 
 import cern.ess.opclib.OpcApi;
 
-public class OPCClient {
-
+public class OPCClient implements OpcApi
+{
 	private final SynchronousQueue<OPCCommand> requestQueue;
 	private final ExecutorService threadRunner;
 	private Future<Integer> threadResult;
@@ -38,9 +38,7 @@ public class OPCClient {
 	{
 		this.requestQueue = new SynchronousQueue<OPCCommand>();
 		this.commandFactory = new OpcCommandFactory(opcInterface, requestQueue);
-		
 		this.threadRunner = Executors.newFixedThreadPool(1);
-		
 	}
 	
 	public void start()
@@ -94,10 +92,9 @@ public class OPCClient {
 	
 	private class CommandExecutor implements Callable<Integer>
 	{
-
 		/**
 		 * task loops taking commands from the command queue and processing them.
-		 * Is killed by a thread interrupt.
+		 * Loop is killed by a thread interrupt.
 		 */
 		@Override
 		public Integer call() throws Exception {
@@ -124,6 +121,19 @@ public class OPCClient {
 		}		
 	}
 	
+	public void init(String host, String server)
+	{
+		OPCCommand command = commandFactory.createInitCommand(server, host, threadResponseQueue.get());
+		command.scheduleAndWaitForResponse();
+	}
+	
+	public String[] getItemNames() 
+	{
+		OPCCommand command = commandFactory.createGetItemNamesCommand(threadResponseQueue.get());	
+		Object result = command.scheduleAndWaitForResponse();		
+		return (String[]) result;
+	}
+	
 	public boolean readBoolean(final String opcItemAddress) 
 	{
 		OPCCommand command = 
@@ -133,12 +143,6 @@ public class OPCClient {
 
 		Object result = command.scheduleAndWaitForResponse();		
 		return ((Boolean)result).booleanValue();			
-	}
-
-	public String[] getItemNames() {
-		OPCCommand command = commandFactory.createGetItemNamesCommand(threadResponseQueue.get());	
-		Object result = command.scheduleAndWaitForResponse();		
-		return (String[]) result;
 	}
 
 	public String[] getLocalServerList() 
@@ -155,18 +159,18 @@ public class OPCClient {
 		return ((Float)result).floatValue();
 	}
 
-	public Object readInt(String opcItemAddress) 
+	public int readInt(String opcItemAddress) 
 	{
 		OPCCommand command = commandFactory.createReadIntCommand(opcItemAddress, threadResponseQueue.get());
 		Object result = command.scheduleAndWaitForResponse();
 		return ((Integer)result).intValue();
 	}
 
-	public Object readString(String opcItemAddress) 
+	public String readString(String opcItemAddress) 
 	{
 		OPCCommand command = commandFactory.createReadStringCommand(opcItemAddress, threadResponseQueue.get());
 		Object result = command.scheduleAndWaitForResponse();
-		return result;
+		return (String)result;
 	}
 
 	public void writeBoolean(String opcItemAddress, boolean value) 
@@ -175,13 +179,13 @@ public class OPCClient {
 		command.scheduleAndWaitForResponse();
 	}
 
-	public void writeFloat(String opcItemAddress, float value, String floatType) 
+	public void writeFloat(String opcItemAddress, String floatType, float value) 
 	{
 		OPCCommand command = commandFactory.createWriteFloatCommand(opcItemAddress, threadResponseQueue.get(), value, floatType);
 		command.scheduleAndWaitForResponse();
 	}
 
-	public void writeInt(String opcItemAddress, int value, String intType) 
+	public void writeInt(String opcItemAddress, String intType, int value) 
 	{
 		OPCCommand command = commandFactory.createWriteIntCommand(opcItemAddress, threadResponseQueue.get(), value, intType);
 		command.scheduleAndWaitForResponse();

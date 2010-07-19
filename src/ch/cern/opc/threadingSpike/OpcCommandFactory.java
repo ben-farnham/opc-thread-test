@@ -64,4 +64,9 @@ public class OpcCommandFactory
 	{
 		return new WriteStringCommand(opcInterface, opcItemAddress, reqQueue, rspQueue, value);
 	}
+
+	public OPCCommand createInitCommand(String host, String server, SynchronousQueue<OPCCommandResult> rspQueue) 
+	{
+		return new InitCommand(opcInterface, reqQueue, rspQueue, host, server);
+	}
 }
