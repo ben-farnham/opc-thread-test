@@ -6,11 +6,9 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,8 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import cern.ess.opclib.OPCException;
-import cern.ess.opclib.OpcApi;
 
 public class OPCClientTest
 {
@@ -257,117 +253,5 @@ public class OPCClientTest
 		assertEquals("b", opcItemValues.get("opc.item.string.2"));
 		assertEquals("c", opcItemValues.get("opc.item.string.3"));
 		}
-	
-	private static class MockOpcApiImpl implements OpcApi
-	{
-		private String[] localServerList;
-		private List<String> requestedItems;
-		private final Map<String, Object> opcItemValues;
-		
-		public MockOpcApiImpl()
-		{
-			requestedItems = new ArrayList<String>();
-			this.opcItemValues = new HashMap<String, Object>(); 
-		}
-		
-		public void setLocalServerList(String[] serverList) 
-		{
-			this.localServerList = serverList;
-		}
-
-		public List<String> getRequestedItems()
-		{
-			return requestedItems;
-		}
-		
-		public Map<String, Object> getOpcItemValues()
-		{
-			return opcItemValues;
-		}
-
-		@Override
-		public String[] getItemNames() throws OPCException 
-		{
-			Set<String> itemNames = opcItemValues.keySet();
-			return itemNames.toArray(new String[0]);
-		}
-
-		@Override
-		public String[] getLocalServerList() throws OPCException 
-		{
-			return localServerList;
-		}
-
-		@Override
-		public boolean readBoolean(String item) throws OPCException 
-		{
-			return ((Boolean)getRequestedItem(item)).booleanValue();				
-		}
-
-		@Override
-		public float readFloat(String item) throws OPCException 
-		{
-			return ((Float)getRequestedItem(item)).floatValue();
-		}
-
-		@Override
-		public int readInt(String item) throws OPCException 
-		{
-			return ((Integer)getRequestedItem(item)).intValue();
-		}
-
-		@Override
-		public String readString(String item) throws OPCException 
-		{
-			return (String)getRequestedItem(item);
-		}
-
-		@Override
-		public void writeBoolean(String item, boolean val) throws OPCException 
-		{
-			setRequestedItem(item, Boolean.valueOf(val));
-		}
-
-		@Override
-		public void writeFloat(String item, String type, float val) throws OPCException 
-		{
-			setRequestedItem(item, Float.valueOf(val));
-		}
-
-		@Override
-		public void writeInt(String item, String type, int val) throws OPCException 
-		{
-			setRequestedItem(item, Integer.valueOf(val));
-		}
-
-		@Override
-		public void writeString(String item, String val) throws OPCException 
-		{
-			setRequestedItem(item, val);
-		}	
-		
-		private Object getRequestedItem(final String opcItemAddress) throws OPCException
-		{
-			requestedItems.add(opcItemAddress);
-			Object value = opcItemValues.get(opcItemAddress);
-			
-			if(value == null)
-			{
-				throw new OPCException("failed to find opc item ["+opcItemAddress+"]");
-			}
-			
-			return value;
-		}
-		
-		private void setRequestedItem(final String opcItemAddress, Object value) throws OPCException
-		{
-			if(!opcItemValues.containsKey(opcItemAddress))
-			{
-				throw new OPCException("failed to find opc item ["+opcItemAddress+"]");				
-			}
-			
-			opcItemValues.put(opcItemAddress, value);
-		}
-	}
 
 }

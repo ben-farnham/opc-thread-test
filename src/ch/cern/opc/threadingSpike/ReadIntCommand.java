@@ -20,5 +20,4 @@ public class ReadIntCommand extends OPCCommandBase implements OPCCommand {
 		Integer value = Integer.valueOf(getOpcApi().readInt(getOpcItemAddress()));
 		responseQueue.put(new OPCCommandResult(true, value));
 	}
-
 }
