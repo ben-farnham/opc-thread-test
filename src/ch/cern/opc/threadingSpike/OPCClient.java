@@ -9,14 +9,18 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApi;
 
 public class OPCClient implements OpcApi
 {
+	private int numberOfCommandsProcessed;
 	private final SynchronousQueue<OPCCommand> requestQueue;
 	private final ExecutorService threadRunner;
 	private Future<Integer> threadResult;
 	private final OpcCommandFactory commandFactory;
+	
+	private boolean initialised = false;
 	
 	private final static int MAX_THREAD_SHUTDOWN_WAIT_MS = 250;
 	
@@ -39,6 +43,7 @@ public class OPCClient implements OpcApi
 		this.requestQueue = new SynchronousQueue<OPCCommand>();
 		this.commandFactory = new OpcCommandFactory(opcInterface, requestQueue);
 		this.threadRunner = Executors.newFixedThreadPool(1);
+		this.numberOfCommandsProcessed = 0;
 	}
 	
 	public void start()
@@ -97,34 +102,55 @@ public class OPCClient implements OpcApi
 		 * Loop is killed by a thread interrupt.
 		 */
 		@Override
-		public Integer call() throws Exception {
+		public Integer call() {
 			System.out.println("OPC Client task for executing commands started");
-			int numberOfCommandsProcessed = 0;
+			
 
 			try 
 			{
-				while(true)
-				{
-					System.out.println("waiting for command...");
-					OPCCommand command = requestQueue.take();
-					command.execute();
-					numberOfCommandsProcessed++;
-				}
+				processCommands();
 			} 
 			catch (InterruptedException e) 
 			{
 				System.out.println("Task interrupted - exiting");
-			}
+			} 
 
 			System.out.println("OPC Client thread stopped");
+			
 			return Integer.valueOf(numberOfCommandsProcessed);
+		}
+
+		private int processCommands() throws InterruptedException 
+		{
+			while(true)
+			{
+				System.out.println("waiting for command...");
+				OPCCommand command = requestQueue.take();
+				try 
+				{
+					command.execute();
+					numberOfCommandsProcessed++;
+				} 
+				catch (OPCException e) 
+				{
+					e.printStackTrace();
+				}
+			}
 		}		
 	}
 	
 	public void init(String host, String server)
 	{
-		OPCCommand command = commandFactory.createInitCommand(server, host, threadResponseQueue.get());
-		command.scheduleAndWaitForResponse();
+		if(!initialised)
+		{
+			OPCCommand command = commandFactory.createInitCommand(server, host, threadResponseQueue.get());
+			command.scheduleAndWaitForResponse();
+			initialised = true;
+		}
+		else
+		{
+			System.out.println("OPCClient thread already initialised - ignoring initialise request");
+		}
 	}
 	
 	public String[] getItemNames() 

@@ -40,7 +40,7 @@ public abstract class OPCCommandBase implements OPCCommand
 			if(commandResult != null)
 			{
 				if(commandResult.isSuccess())
-				{
+				{					
 					return commandResult.getResult();
 				}
 				else
@@ -65,7 +65,9 @@ public abstract class OPCCommandBase implements OPCCommand
 	{
 		try 
 		{
+			System.out.println("scheduling command...");
 			requestQueue.put(this);
+			System.out.println("scheduled command");
 		} 
 		catch (InterruptedException e1) 
 		{

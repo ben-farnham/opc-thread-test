@@ -21,6 +21,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import cern.ess.opclib.OPCException;
+
 
 public class OPCClientTest
 {
@@ -265,5 +267,12 @@ public class OPCClientTest
 		testee.init("another host", "another server");
 		assertEquals(1, mockOpcApi.getNumberOfTimesInitWasCalled());
 	}
-
+	
+	@Test
+	public void testInitialiseCommandRequiredBeforeProcessingAnyOtherCommands()
+	{
+		mockOpcApi.getOpcItemValues().put("whatever", Integer.valueOf(1));
+		testee.readInt("whatever");
+		fail("expected exception to be thrown");
+	}
 }
