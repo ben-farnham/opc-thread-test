@@ -4,7 +4,7 @@ import java.util.concurrent.Callable;
 
 import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApiFactory;
-import ch.ess.opclib.clientThread.OPCClient;
+import cern.ess.opclib.clientThread.OPCClient;
 
 public class ImprovedOpcThread implements Callable<List<ErrorMessage>> 
 {

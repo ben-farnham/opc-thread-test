@@ -1,4 +1,4 @@
-package ch.ess.opclib.clientThread;
+package cern.ess.opclib.clientThread;
 
 import cern.ess.opclib.OPCException;
 

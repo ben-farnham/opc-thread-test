@@ -1,13 +1,13 @@
-package ch.ess.opclib.clientThread;
+package cern.ess.opclib.clientThread;
 
 import java.util.concurrent.SynchronousQueue;
 
 import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApi;
 
-public class ReadIntCommand extends OPCCommandBase implements OPCCommand {
+public class ReadStringCommand extends OPCCommandBase implements OPCCommand {
 
-	public ReadIntCommand(OpcApi opcInterface, String opcItemAddress,
+	public ReadStringCommand(OpcApi opcInterface, String opcItemAddress,
 			SynchronousQueue<OPCCommand> requestQueue,
 			SynchronousQueue<OPCCommandResult> responseQueue) 
 	{
@@ -17,7 +17,8 @@ public class ReadIntCommand extends OPCCommandBase implements OPCCommand {
 	@Override
 	public void execute() throws OPCException, InterruptedException 
 	{
-		Integer value = Integer.valueOf(getOpcApi().readInt(getOpcItemAddress()));
+		String value = getOpcApi().readString(getOpcItemAddress());
 		responseQueue.put(new OPCCommandResult(value));
 	}
+
 }

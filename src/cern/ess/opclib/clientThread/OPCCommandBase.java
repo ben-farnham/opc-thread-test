@@ -1,4 +1,4 @@
-package ch.ess.opclib.clientThread;
+package cern.ess.opclib.clientThread;
 
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;

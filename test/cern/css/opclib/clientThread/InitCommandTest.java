@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.ess.opclib.clientThread.InitCommand;
-import ch.ess.opclib.clientThread.OPCCommand;
+import cern.ess.opclib.clientThread.InitCommand;
+import cern.ess.opclib.clientThread.OPCCommand;
 
 
 public class InitCommandTest 

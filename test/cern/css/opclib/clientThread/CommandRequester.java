@@ -5,7 +5,7 @@ package cern.css.opclib.clientThread;
 
 import java.util.concurrent.Callable;
 
-import ch.ess.opclib.clientThread.OPCClient;
+import cern.ess.opclib.clientThread.OPCClient;
 
 class CommandRequester implements Callable<Boolean>
 {

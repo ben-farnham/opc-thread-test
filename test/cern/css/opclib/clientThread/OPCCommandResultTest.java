@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import cern.ess.opclib.OPCException;
-import ch.ess.opclib.clientThread.OPCCommandResult;
+import cern.ess.opclib.clientThread.OPCCommandResult;
 
 
 public class OPCCommandResultTest 

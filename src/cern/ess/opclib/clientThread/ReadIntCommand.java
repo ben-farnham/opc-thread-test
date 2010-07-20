@@ -1,14 +1,13 @@
-package ch.ess.opclib.clientThread;
+package cern.ess.opclib.clientThread;
 
 import java.util.concurrent.SynchronousQueue;
 
 import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApi;
 
-public class ReadFloatCommand extends OPCCommandBase implements OPCCommand 
-{
+public class ReadIntCommand extends OPCCommandBase implements OPCCommand {
 
-	public ReadFloatCommand(OpcApi opcInterface, String opcItemAddress,
+	public ReadIntCommand(OpcApi opcInterface, String opcItemAddress,
 			SynchronousQueue<OPCCommand> requestQueue,
 			SynchronousQueue<OPCCommandResult> responseQueue) 
 	{
@@ -18,8 +17,7 @@ public class ReadFloatCommand extends OPCCommandBase implements OPCCommand
 	@Override
 	public void execute() throws OPCException, InterruptedException 
 	{
-		Float value = Float.valueOf(getOpcApi().readFloat(getOpcItemAddress()));
-		responseQueue.put(new OPCCommandResult(value));		
+		Integer value = Integer.valueOf(getOpcApi().readInt(getOpcItemAddress()));
+		responseQueue.put(new OPCCommandResult(value));
 	}
-
 }

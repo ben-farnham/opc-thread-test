@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cern.ess.opclib.OPCException;
-import ch.ess.opclib.clientThread.OPCClient;
+import cern.ess.opclib.clientThread.OPCClient;
 
 
 public class OPCClientTest

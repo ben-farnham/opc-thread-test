@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.ess.opclib.clientThread.ReadBooleanCommand;
+import cern.ess.opclib.clientThread.ReadBooleanCommand;
 
 
 public class ReadBooleanCommandTest 

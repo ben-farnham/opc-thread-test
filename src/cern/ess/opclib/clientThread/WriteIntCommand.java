@@ -1,28 +1,28 @@
-package ch.ess.opclib.clientThread;
+package cern.ess.opclib.clientThread;
 
 import java.util.concurrent.SynchronousQueue;
 
 import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApi;
 
-public class WriteFloatCommand extends OPCWriteCommandBase implements OPCCommand 
+public class WriteIntCommand extends OPCWriteCommandBase implements OPCCommand 
 {
-	private final String floatType;
+	private final String intType;
 	
-	public WriteFloatCommand(OpcApi opcInterface, String opcItemAddress,
+	public WriteIntCommand(OpcApi opcInterface, String opcItemAddress,
 			SynchronousQueue<OPCCommand> requestQueue,
 			SynchronousQueue<OPCCommandResult> responseQueue,
-			Float valueToWrite,
-			String floatType) 
+			Object valueToWrite,
+			final String intType) 
 	{
 		super(opcInterface, opcItemAddress, requestQueue, responseQueue, valueToWrite);
-		this.floatType = floatType;
+		this.intType = intType;
 	}
 
 	@Override
 	public void execute() throws OPCException, InterruptedException 
 	{
-		getOpcApi().writeFloat(getOpcItemAddress(), floatType, ((Float)getValueToWrite()).floatValue());
+		getOpcApi().writeInt(getOpcItemAddress(), intType, ((Integer)getValueToWrite()).intValue());
 		responseQueue.put(new OPCCommandResult(new Object()));
 	}
 
