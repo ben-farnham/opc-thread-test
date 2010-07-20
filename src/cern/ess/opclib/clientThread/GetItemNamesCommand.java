@@ -10,14 +10,9 @@ public class GetItemNamesCommand extends OPCCommandBase implements OPCCommand {
 
 	public GetItemNamesCommand(OpcApi opcInterface,
 			SynchronousQueue<OPCCommand> reqQueue,
-			SynchronousQueue<OPCCommandResult> rspQueue) {
-		super(opcInterface, "!not item specific!", reqQueue, rspQueue);
-	}
-
-	@Override
-	public String getCommandName() 
+			SynchronousQueue<OPCCommandResult> rspQueue) 
 	{
-		return "GetItemNames";
+		super(opcInterface, "!not item specific!", reqQueue, rspQueue);
 	}
 
 	@Override

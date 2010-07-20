@@ -20,11 +20,4 @@ public class GetLocalServerListCommand extends OPCCommandBase implements OPCComm
 	{
 		return getOpcApi().getLocalServerList();
 	}
-
-	@Override
-	public String getCommandName() 
-	{
-		return "GetLocalServerList";
-	}
-
 }

@@ -22,5 +22,4 @@ public class WriteStringCommand extends OPCWriteCommandBase implements OPCComman
 		getOpcApi().writeString(getOpcItemAddress(), (String)getValueToWrite());
 		return new Object();
 	}
-
 }
