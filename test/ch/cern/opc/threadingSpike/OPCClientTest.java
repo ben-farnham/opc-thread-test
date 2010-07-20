@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -26,23 +25,18 @@ import cern.ess.opclib.OPCException;
 
 public class OPCClientTest
 {
-	private SynchronousQueue<OPCCommandResult> responseQueue;
-
 	private OPCClient testee;
 	private MockOpcApiImpl mockOpcApi;
 	
-	public final static String OPC_BOOLEAN_ITEM_ADDRESS_TRUE = "this.that.boolean.value.true";
-	public final static String OPC_BOOLEAN_ITEM_ADDRESS_FALSE = "this.that.boolean.value.false";
-	
 	@Before
-	public void setup()
+	public void setup() throws OPCException
 	{
-		responseQueue = new SynchronousQueue<OPCCommandResult>();
-		
 		mockOpcApi = new MockOpcApiImpl();
 			
 		testee = new OPCClient(mockOpcApi);
 		testee.start();
+		
+		testee.init("host", "server");
 	}
 	
 	@After
@@ -52,10 +46,8 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testReadBooleanRequestsCorrectItem() throws InterruptedException
-	{
-		assertEquals(0, responseQueue.size());
-
+	public void testReadBooleanRequestsCorrectItem() throws InterruptedException, OPCException
+	{		
 		String itemAddress = "My.Boolean.Item.Address"; 
 		mockOpcApi.getOpcItemValues().put(itemAddress, Boolean.TRUE);
 		
@@ -66,7 +58,7 @@ public class OPCClientTest
 	}
 
 	@Test
-	public void testMultipleReadBooleanCommandsFromSingleThread() throws InterruptedException
+	public void testMultipleReadBooleanCommandsFromSingleThread() throws InterruptedException, OPCException
 	{	
 		String opcItemAddress = "My.Repeat.Test";
 		mockOpcApi.getOpcItemValues().put(opcItemAddress, Boolean.TRUE);
@@ -116,7 +108,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testGetItemNames()
+	public void testGetItemNames() throws OPCException
 	{
 		String itemNames[] = {"item.1", "item.2", "item.3", "item.4", "item.5"};
 		for(int i=0; i<itemNames.length; i++)
@@ -132,7 +124,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testGetLocalServerList()
+	public void testGetLocalServerList() throws OPCException
 	{
 		String serverList[] = {"server.1", "server.2", "server.3"};
 		mockOpcApi.setLocalServerList(serverList);
@@ -145,7 +137,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testReadFloat()
+	public void testReadFloat() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.float1", (float)1.0);
@@ -158,7 +150,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testReadInt()
+	public void testReadInt() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.int.1", 1);
@@ -171,7 +163,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testReadString()
+	public void testReadString() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.string.1", "one");
@@ -184,7 +176,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testWriteBoolean()
+	public void testWriteBoolean() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.boolean.1", false);
@@ -201,7 +193,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testWriteFloat()
+	public void testWriteFloat() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.float.1", (float)1.0);
@@ -223,7 +215,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testWriteInt()
+	public void testWriteInt() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.int.1", 1);
@@ -240,7 +232,7 @@ public class OPCClientTest
 	}
 	
 	@Test
-	public void testWriteString()
+	public void testWriteString() throws OPCException
 	{
 		Map<String, Object> opcItemValues = mockOpcApi.getOpcItemValues();
 		opcItemValues.put("opc.item.string.1", "one");
@@ -257,22 +249,17 @@ public class OPCClientTest
 		}
 	
 	@Test
-	public void testFirstInitCommandCallsInit()
+	public void testExceptionStoredInResultIfThrown()
 	{
-		assertEquals(0, mockOpcApi.getNumberOfTimesInitWasCalled());
-		
-		testee.init("host", "server");
-		assertEquals(1, mockOpcApi.getNumberOfTimesInitWasCalled());
-		
-		testee.init("another host", "another server");
-		assertEquals(1, mockOpcApi.getNumberOfTimesInitWasCalled());
-	}
-	
-	@Test
-	public void testInitialiseCommandRequiredBeforeProcessingAnyOtherCommands()
-	{
-		mockOpcApi.getOpcItemValues().put("whatever", Integer.valueOf(1));
-		testee.readInt("whatever");
-		fail("expected exception to be thrown");
+		final String invalidItemAddress = "this.item.does.not.exist"; 
+		try
+		{
+			testee.writeBoolean(invalidItemAddress, false);
+			fail("expected OPCException to be thrown");
+		}
+		catch(OPCException e)
+		{
+			assertEquals("failed to find opc item ["+invalidItemAddress+"]", e.getMessage());
+		}
 	}
 }

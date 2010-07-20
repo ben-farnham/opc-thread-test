@@ -1,16 +1,27 @@
 package ch.cern.opc.threadingSpike;
 
+import cern.ess.opclib.OPCException;
+
 public class OPCCommandResult 
 {
 	private final boolean success;
 	private final Object result;
+	private final OPCException exception;
 		
-	public OPCCommandResult(boolean success, Object result)
+	public OPCCommandResult(Object result)
 	{
-		this.success = success;
+		this.success = true;
 		this.result = result;
+		this.exception = null;
 	}
 	
+	public OPCCommandResult(OPCException opcException) 
+	{
+		this.success = false;
+		this.result = null;
+		this.exception = opcException;
+	}
+
 	public boolean isSuccess() 
 	{
 		return success;
@@ -19,5 +30,10 @@ public class OPCCommandResult
 	public Object getResult()
 	{
 		return result;
+	}
+	
+	public OPCException getException()
+	{
+		return exception;
 	}
 }

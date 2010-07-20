@@ -17,6 +17,6 @@ public class ReadBooleanCommand extends OPCCommandBase implements OPCCommand
 	public void execute() throws OPCException, InterruptedException
 	{
 		Boolean value = Boolean.valueOf(getOpcApi().readBoolean(getOpcItemAddress()));
-		responseQueue.put(new OPCCommandResult(true, value));
+		responseQueue.put(new OPCCommandResult(value));
 	}
 }

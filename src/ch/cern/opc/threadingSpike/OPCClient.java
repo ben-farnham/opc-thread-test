@@ -126,20 +126,35 @@ public class OPCClient implements OpcApi
 			{
 				System.out.println("waiting for command...");
 				OPCCommand command = requestQueue.take();
-				try 
+				System.out.println("command received, processing");
+				
+				if(!initialised && !command.isInitCommand())
 				{
-					command.execute();
-					numberOfCommandsProcessed++;
-				} 
-				catch (OPCException e) 
-				{
-					e.printStackTrace();
+					command.reportError(new OPCException("init must be called before any other operation"));
 				}
+				else
+				{
+					processCommand(command);					
+				}
+				
+			}
+		}
+
+		private void processCommand(OPCCommand command) throws InterruptedException 
+		{
+			try 
+			{
+				command.execute();
+				numberOfCommandsProcessed++;
+			} 
+			catch (OPCException e) 
+			{
+				command.reportError(e);
 			}
 		}		
 	}
 	
-	public void init(String host, String server)
+	public void init(String host, String server) throws OPCException
 	{
 		if(!initialised)
 		{
@@ -153,14 +168,14 @@ public class OPCClient implements OpcApi
 		}
 	}
 	
-	public String[] getItemNames() 
+	public String[] getItemNames() throws OPCException
 	{
 		OPCCommand command = commandFactory.createGetItemNamesCommand(threadResponseQueue.get());	
 		Object result = command.scheduleAndWaitForResponse();		
 		return (String[]) result;
 	}
 	
-	public boolean readBoolean(final String opcItemAddress) 
+	public boolean readBoolean(final String opcItemAddress) throws OPCException
 	{
 		OPCCommand command = 
 			commandFactory.createReadBooleanCommand(
@@ -171,53 +186,53 @@ public class OPCClient implements OpcApi
 		return ((Boolean)result).booleanValue();			
 	}
 
-	public String[] getLocalServerList() 
+	public String[] getLocalServerList() throws OPCException
 	{
 		OPCCommand command = commandFactory.createGetLocalServerList(threadResponseQueue.get());
 		Object result = command.scheduleAndWaitForResponse();
 		return (String[]) result;
 	}
 
-	public float readFloat(String opcItemAddress)
+	public float readFloat(String opcItemAddress) throws OPCException
 	{
 		OPCCommand command = commandFactory.createReadFloatCommand(opcItemAddress, threadResponseQueue.get());
 		Object result = command.scheduleAndWaitForResponse();
 		return ((Float)result).floatValue();
 	}
 
-	public int readInt(String opcItemAddress) 
+	public int readInt(String opcItemAddress) throws OPCException
 	{
 		OPCCommand command = commandFactory.createReadIntCommand(opcItemAddress, threadResponseQueue.get());
 		Object result = command.scheduleAndWaitForResponse();
 		return ((Integer)result).intValue();
 	}
 
-	public String readString(String opcItemAddress) 
+	public String readString(String opcItemAddress) throws OPCException
 	{
 		OPCCommand command = commandFactory.createReadStringCommand(opcItemAddress, threadResponseQueue.get());
 		Object result = command.scheduleAndWaitForResponse();
 		return (String)result;
 	}
 
-	public void writeBoolean(String opcItemAddress, boolean value) 
+	public void writeBoolean(String opcItemAddress, boolean value) throws OPCException 
 	{
 		OPCCommand command = commandFactory.createWriteBooleanCommand(opcItemAddress, threadResponseQueue.get(), value);
 		command.scheduleAndWaitForResponse();
 	}
 
-	public void writeFloat(String opcItemAddress, String floatType, float value) 
+	public void writeFloat(String opcItemAddress, String floatType, float value) throws OPCException 
 	{
 		OPCCommand command = commandFactory.createWriteFloatCommand(opcItemAddress, threadResponseQueue.get(), value, floatType);
 		command.scheduleAndWaitForResponse();
 	}
 
-	public void writeInt(String opcItemAddress, String intType, int value) 
+	public void writeInt(String opcItemAddress, String intType, int value) throws OPCException
 	{
 		OPCCommand command = commandFactory.createWriteIntCommand(opcItemAddress, threadResponseQueue.get(), value, intType);
 		command.scheduleAndWaitForResponse();
 	}
 
-	public void writeString(String opcItemAddress, String value) 
+	public void writeString(String opcItemAddress, String value) throws OPCException
 	{
 		OPCCommand command = commandFactory.createWriteStringCommand(opcItemAddress, threadResponseQueue.get(), value);
 		command.scheduleAndWaitForResponse();

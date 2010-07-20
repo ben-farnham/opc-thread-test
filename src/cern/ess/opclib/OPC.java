@@ -7,7 +7,7 @@
 
 package cern.ess.opclib;
 
-class OPC 
+public class OPC 
 {
   public static native void init(String host, String server) throws OPCException;
   public static native String[] getItemNames()  throws OPCException;

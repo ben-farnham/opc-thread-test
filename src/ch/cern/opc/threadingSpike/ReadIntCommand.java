@@ -18,6 +18,6 @@ public class ReadIntCommand extends OPCCommandBase implements OPCCommand {
 	public void execute() throws OPCException, InterruptedException 
 	{
 		Integer value = Integer.valueOf(getOpcApi().readInt(getOpcItemAddress()));
-		responseQueue.put(new OPCCommandResult(true, value));
+		responseQueue.put(new OPCCommandResult(value));
 	}
 }

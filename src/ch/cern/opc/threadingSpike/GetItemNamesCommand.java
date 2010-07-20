@@ -24,6 +24,6 @@ public class GetItemNamesCommand extends OPCCommandBase implements OPCCommand {
 	public void execute() throws OPCException, InterruptedException
 	{
 		String[] itemNames = getOpcApi().getItemNames();
-		responseQueue.put(new OPCCommandResult(true, itemNames));
+		responseQueue.put(new OPCCommandResult(itemNames));
 	}
 }

@@ -19,7 +19,7 @@ public class ReadFloatCommand extends OPCCommandBase implements OPCCommand
 	public void execute() throws OPCException, InterruptedException 
 	{
 		Float value = Float.valueOf(getOpcApi().readFloat(getOpcItemAddress()));
-		responseQueue.put(new OPCCommandResult(true, value));		
+		responseQueue.put(new OPCCommandResult(value));		
 	}
 
 }

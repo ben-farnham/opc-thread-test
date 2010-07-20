@@ -3,6 +3,7 @@ package ch.cern.opc.threadingSpike;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
+import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApi;
 
 
@@ -26,14 +27,14 @@ public abstract class OPCCommandBase implements OPCCommand
 	}
 	
 	@Override
-	public Object scheduleAndWaitForResponse()
+	public Object scheduleAndWaitForResponse() throws OPCException
 	{	
 		scheduleCommand();			
 		return getResponse(responseQueue);
 	}
 	
 
-	private Object getResponse(SynchronousQueue<OPCCommandResult> responseQueue) {
+	private Object getResponse(SynchronousQueue<OPCCommandResult> responseQueue) throws OPCException {
 		try 
 		{
 			OPCCommandResult commandResult = responseQueue.poll(1, TimeUnit.SECONDS);
@@ -46,6 +47,7 @@ public abstract class OPCCommandBase implements OPCCommand
 				else
 				{
 					System.err.println("**ERROR**: execution failure - "+this);
+					throw commandResult.getException();
 				}
 			}
 			else
@@ -102,5 +104,11 @@ public abstract class OPCCommandBase implements OPCCommand
 	public boolean isInitCommand() 
 	{
 		return false;
+	}
+	
+	@Override
+	public void reportError(OPCException exception) throws InterruptedException 
+	{
+		responseQueue.put(new OPCCommandResult(exception));
 	}
 }

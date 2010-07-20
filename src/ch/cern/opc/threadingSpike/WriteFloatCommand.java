@@ -23,7 +23,7 @@ public class WriteFloatCommand extends OPCWriteCommandBase implements OPCCommand
 	public void execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().writeFloat(getOpcItemAddress(), floatType, ((Float)getValueToWrite()).floatValue());
-		responseQueue.put(new OPCCommandResult(true, new Object()));
+		responseQueue.put(new OPCCommandResult(new Object()));
 	}
 
 }

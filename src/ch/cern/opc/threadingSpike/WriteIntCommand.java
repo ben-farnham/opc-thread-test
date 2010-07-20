@@ -23,7 +23,7 @@ public class WriteIntCommand extends OPCWriteCommandBase implements OPCCommand
 	public void execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().writeInt(getOpcItemAddress(), intType, ((Integer)getValueToWrite()).intValue());
-		responseQueue.put(new OPCCommandResult(true, new Object()));
+		responseQueue.put(new OPCCommandResult(new Object()));
 	}
 
 }

@@ -20,7 +20,7 @@ public class WriteStringCommand extends OPCWriteCommandBase implements OPCComman
 	public void execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().writeString(getOpcItemAddress(), (String)getValueToWrite());
-		responseQueue.put(new OPCCommandResult(true, new Object()));
+		responseQueue.put(new OPCCommandResult(new Object()));
 	}
 
 }

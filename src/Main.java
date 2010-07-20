@@ -27,10 +27,14 @@ public class Main {
 		Collection<Callable<List<ErrorMessage>>> threads = new ArrayList<Callable<List<ErrorMessage>>>();
 		for(int i = 0; i < nNumThreads; i++)
 		{
+			/* Old skool - not working
 			threads.add(new OPCThread(LOCAL_HOST_IP, MATRIKON_OPC_SERVER, i));
+			*/
+			
+			threads.add(new ImprovedOpcThread(LOCAL_HOST_IP, MATRIKON_OPC_SERVER, i));
 		}
 		
-		ExecutorService executor = Executors.newFixedThreadPool (nNumThreads);
+		ExecutorService executor = Executors.newFixedThreadPool(1);
 		List<Future<List<ErrorMessage>>> results = executor.invokeAll(threads);
 		
 		for(int i=0; i<nNumThreads; i++)
