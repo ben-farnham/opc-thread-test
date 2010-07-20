@@ -1,18 +1,20 @@
 /**
  * 
  */
-package cern.css.opclib.clientThread;
+package cern.ess.opclib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApi;
 
-class MockOpcApiImpl implements OpcApi
+public class MockOpcApiImpl implements OpcApi
 {
 	private String[] localServerList;
 	private List<String> requestedItems;
@@ -134,5 +136,11 @@ class MockOpcApiImpl implements OpcApi
 	public int getNumberOfTimesInitWasCalled()
 	{
 		return initCalledCount;
+	}
+
+	@Override
+	public int stop() throws InterruptedException, ExecutionException, TimeoutException 
+	{
+		throw new UnsupportedOperationException("not in this context - this is for thread based clients");
 	}
 }

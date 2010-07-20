@@ -25,10 +25,10 @@ public class InitCommand extends OPCCommandBase implements OPCCommand
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().init(host, server);
-		responseQueue.put(new OPCCommandResult(new Object()));
+		return new Object();
 	}
 	
 	@Override

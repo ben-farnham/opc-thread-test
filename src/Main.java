@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
+
+import static cern.ess.opclib.OPCClientInstance.theOPCClient;
 
 
 public class Main {
@@ -17,9 +20,13 @@ public class Main {
 	/**
 	 * @param args
 	 * @throws InterruptedException 
+	 * @throws InterruptedException 
 	 * @throws ExecutionException 
+	 * @throws ExecutionException 
+	 * @throws TimeoutException 
 	 */
-	public static void main(String[] args) throws InterruptedException, ExecutionException {
+	public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException 
+	{
 		System.out.println("App started");
 		
 		final int nNumThreads = 20;		
@@ -48,6 +55,11 @@ public class Main {
 				System.out.println(iter.next());
 			}
 		}
+		// stop the OPCClient command handler thread
+		theOPCClient.stop();
+		
+		// stop the command producer threads in pool
+		executor.shutdown();
 		
 		System.out.println("Exiting.");
 	}	

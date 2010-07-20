@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import cern.ess.opclib.MockOpcApiImpl;
 import cern.ess.opclib.clientThread.InitCommand;
 import cern.ess.opclib.clientThread.OPCCommand;
 

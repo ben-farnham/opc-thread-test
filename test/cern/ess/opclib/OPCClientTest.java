@@ -1,4 +1,4 @@
-package cern.css.opclib.clientThread;
+package cern.ess.opclib;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -20,8 +20,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
+import cern.css.opclib.clientThread.CommandRequester;
 import cern.ess.opclib.OPCException;
-import cern.ess.opclib.clientThread.OPCClient;
 
 
 public class OPCClientTest
@@ -43,9 +44,22 @@ public class OPCClientTest
 	@After
 	public void teardown()
 	{
-		testee.stop();
-	}
-	
+		try {
+			testee.stop();
+		} 
+		catch (InterruptedException e) 
+		{
+			fail("could not stop OPCClient thread");
+		} 
+		catch (ExecutionException e) 
+		{
+			fail("could not stop OPCClient thread");
+		} 
+		catch (TimeoutException e) 
+		{
+			fail("could not stop OPCClient thread");
+		}
+	}	
 	@Test
 	public void testReadBooleanRequestsCorrectItem() throws InterruptedException, OPCException
 	{		

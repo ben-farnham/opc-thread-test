@@ -16,10 +16,9 @@ public class ReadFloatCommand extends OPCCommandBase implements OPCCommand
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
-		Float value = Float.valueOf(getOpcApi().readFloat(getOpcItemAddress()));
-		responseQueue.put(new OPCCommandResult(value));		
+		return Float.valueOf(getOpcApi().readFloat(getOpcItemAddress()));
 	}
 
 }

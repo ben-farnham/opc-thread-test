@@ -17,10 +17,10 @@ public class WriteStringCommand extends OPCWriteCommandBase implements OPCComman
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().writeString(getOpcItemAddress(), (String)getValueToWrite());
-		responseQueue.put(new OPCCommandResult(new Object()));
+		return new Object();
 	}
 
 }

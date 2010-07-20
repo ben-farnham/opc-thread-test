@@ -15,10 +15,9 @@ public class ReadStringCommand extends OPCCommandBase implements OPCCommand {
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
-		String value = getOpcApi().readString(getOpcItemAddress());
-		responseQueue.put(new OPCCommandResult(value));
+		return getOpcApi().readString(getOpcItemAddress());
 	}
 
 }

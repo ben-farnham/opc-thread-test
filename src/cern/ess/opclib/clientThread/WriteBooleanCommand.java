@@ -16,10 +16,10 @@ public class WriteBooleanCommand extends OPCWriteCommandBase implements OPCComma
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().writeBoolean(getOpcItemAddress(), ((Boolean)getValueToWrite()).booleanValue());
-		responseQueue.put(new OPCCommandResult(new Object()));
+		return new Object();
 	}
 
 }

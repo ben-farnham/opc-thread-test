@@ -9,12 +9,17 @@ public interface OPCCommand
 	/**
 	 * Called from context of OPC client handler thread
 	 */
-	public void execute() throws OPCException, InterruptedException;
+	public Object execute() throws OPCException, InterruptedException;
 	
 	/**
 	 * Called from the context of the OPC client handler thread
 	 */
 	public void reportError(OPCException exception) throws InterruptedException;
+	
+	/**
+	 * Called from the context of the OPC client handler thread
+	 */
+	public void reportSuccess(Object result) throws InterruptedException;
 	
 	/**
 	 * Called from context of some client to the OPC handler 

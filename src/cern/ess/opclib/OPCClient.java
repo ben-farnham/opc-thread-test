@@ -1,4 +1,4 @@
-package cern.ess.opclib.clientThread;
+package cern.ess.opclib;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -9,10 +9,19 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import cern.ess.opclib.OPCException;
-import cern.ess.opclib.OpcApi;
+import cern.ess.opclib.clientThread.OPCCommand;
+import cern.ess.opclib.clientThread.OPCCommandResult;
+import cern.ess.opclib.clientThread.OpcCommandFactory;
 
-public class OPCClient implements OpcApi
+/**
+ * Multithreaded class - starts an internal thread to handle processing
+ * commands and also exposes (to external class client threads) methods
+ * for scheduling commands for the central processor thread.
+ *  
+ * @author bfarnham
+ *
+ */
+class OPCClient implements OpcApi
 {
 	private int numberOfCommandsProcessed;
 	private final SynchronousQueue<OPCCommand> requestQueue;
@@ -52,24 +61,18 @@ public class OPCClient implements OpcApi
 		threadResult = threadRunner.submit(new CommandExecutor());
 	}
 	
-	public int stop()
+	public int stop() throws InterruptedException, ExecutionException, TimeoutException
 	{	
 		System.out.println("Stopping OPC Client thread...");
 		threadRunner.shutdownNow();
 		requestQueue.clear();
 	
 		int result = -1;
-		try 
+		Integer objectResult = threadResult.get(MAX_THREAD_SHUTDOWN_WAIT_MS, TimeUnit.MILLISECONDS);
+		if(objectResult != null)
 		{
-			Integer objectResult = threadResult.get(MAX_THREAD_SHUTDOWN_WAIT_MS, TimeUnit.MILLISECONDS);
-			if(objectResult != null)
-			{
-				result = objectResult.intValue();
-			}
-		} 
-		catch (InterruptedException e){} 
-		catch (ExecutionException e){} 
-		catch (TimeoutException e){}
+			result = objectResult.intValue();
+		}
 		
 		System.out.println("command queue consumer task stopped - processed ["+result+"] commands");
 		
@@ -145,7 +148,8 @@ public class OPCClient implements OpcApi
 		{
 			try 
 			{
-				command.execute();
+				Object executionResult = command.execute();
+				command.reportSuccess(executionResult);
 				numberOfCommandsProcessed++;
 			} 
 			catch (OPCException e) 

@@ -1,6 +1,6 @@
 package cern.ess.opclib;
 
-public class OpcApiFactory 
+class OpcApiFactory 
 {
 	public OpcApi createOpcApi()
 	{

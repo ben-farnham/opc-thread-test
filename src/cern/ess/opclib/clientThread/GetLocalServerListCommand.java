@@ -16,10 +16,9 @@ public class GetLocalServerListCommand extends OPCCommandBase implements OPCComm
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
-		String[] localServerList = getOpcApi().getLocalServerList();
-		responseQueue.put(new OPCCommandResult(localServerList));
+		return getOpcApi().getLocalServerList();
 	}
 
 	@Override

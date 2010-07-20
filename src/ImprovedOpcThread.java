@@ -1,10 +1,10 @@
+import static cern.ess.opclib.OPCClientInstance.theOPCClient;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import cern.ess.opclib.OPCException;
-import cern.ess.opclib.OpcApiFactory;
-import cern.ess.opclib.clientThread.OPCClient;
 
 public class ImprovedOpcThread implements Callable<List<ErrorMessage>> 
 {
@@ -20,13 +20,6 @@ public class ImprovedOpcThread implements Callable<List<ErrorMessage>>
 	private final String opcServer;
 	private final int id;
 	
-	public static OPCClient theClient;
-	static
-	{
-		theClient = new OPCClient(new OpcApiFactory().createOpcApi());
-		theClient.start();
-	}
-
 	public ImprovedOpcThread(String host, String opcServer, final int id)
 	{
 		this.host = host;
@@ -40,7 +33,7 @@ public class ImprovedOpcThread implements Callable<List<ErrorMessage>>
 		List<ErrorMessage> result = new ArrayList<ErrorMessage>();
 		try
 		{
-			theClient.init(host, opcServer);
+			theOPCClient.init(host, opcServer);
 			
 			for (int i=0; i<10; i++)
 			{
@@ -90,38 +83,38 @@ public class ImprovedOpcThread implements Callable<List<ErrorMessage>>
 	
 	private void readWriteBoolean(String opcItemAddress) throws OPCException
 	{
-		boolean bValue = theClient.readBoolean(opcItemAddress);
+		boolean bValue = theOPCClient.readBoolean(opcItemAddress);
 		System.out.println(opcItemAddress + " (pre-write) has value["+bValue+"]");
 		
-		theClient.writeBoolean(opcItemAddress, !bValue);
-		System.out.println(opcItemAddress + " (post-write) has value["+theClient.readBoolean(opcItemAddress)+"]");		
+		theOPCClient.writeBoolean(opcItemAddress, !bValue);
+		System.out.println(opcItemAddress + " (post-write) has value["+theOPCClient.readBoolean(opcItemAddress)+"]");		
 	}
 	
 	private void readWriteInt(String opcItemAddress, String intType) throws OPCException
 	{
-		int nValue = theClient.readInt(opcItemAddress);
+		int nValue = theOPCClient.readInt(opcItemAddress);
 		System.out.println(opcItemAddress + " (pre-write) has value["+nValue+"]");
 		
-		theClient.writeInt(opcItemAddress, intType, ++nValue);
-		System.out.println(opcItemAddress + " (post-write) has value["+theClient.readInt(opcItemAddress)+"]");	
+		theOPCClient.writeInt(opcItemAddress, intType, ++nValue);
+		System.out.println(opcItemAddress + " (post-write) has value["+theOPCClient.readInt(opcItemAddress)+"]");	
 	}
 	
 	private void readWriteFloat(String opcItemAddress, String floatType) throws OPCException
 	{
-		float fValue = theClient.readFloat(opcItemAddress);
+		float fValue = theOPCClient.readFloat(opcItemAddress);
 		System.out.println(opcItemAddress + " (pre-write) has value["+fValue+"]");
 		
-		theClient.writeFloat(opcItemAddress, floatType, fValue += 0.5);
-		System.out.println(opcItemAddress + " (post-write) has value["+theClient.readFloat(opcItemAddress)+"]");		
+		theOPCClient.writeFloat(opcItemAddress, floatType, fValue += 0.5);
+		System.out.println(opcItemAddress + " (post-write) has value["+theOPCClient.readFloat(opcItemAddress)+"]");		
 	}
 	
 	private void readWriteString(String opcItemAddress) throws OPCException
 	{
-		String sValue = theClient.readString(opcItemAddress);
+		String sValue = theOPCClient.readString(opcItemAddress);
 		System.out.println(opcItemAddress + " (pre-write) has value["+sValue+"]");
 		
-		theClient.writeString(opcItemAddress, sValue.equals("woo")?"waa":"woo");
-		System.out.println(opcItemAddress + " (post-write) has value["+theClient.readString(opcItemAddress)+"]");		
+		theOPCClient.writeString(opcItemAddress, sValue.equals("woo")?"waa":"woo");
+		System.out.println(opcItemAddress + " (post-write) has value["+theOPCClient.readString(opcItemAddress)+"]");		
 	}
 
 }

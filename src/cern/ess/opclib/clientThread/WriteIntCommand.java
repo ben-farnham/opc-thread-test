@@ -20,10 +20,10 @@ public class WriteIntCommand extends OPCWriteCommandBase implements OPCCommand
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
 		getOpcApi().writeInt(getOpcItemAddress(), intType, ((Integer)getValueToWrite()).intValue());
-		responseQueue.put(new OPCCommandResult(new Object()));
+		return new Object();
 	}
 
 }

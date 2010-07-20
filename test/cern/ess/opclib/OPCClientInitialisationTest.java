@@ -1,14 +1,17 @@
-package cern.css.opclib.clientThread;
+package cern.ess.opclib;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import cern.ess.opclib.OPCClient;
 import cern.ess.opclib.OPCException;
-import cern.ess.opclib.clientThread.OPCClient;
 
 public class OPCClientInitialisationTest 
 {
@@ -27,7 +30,21 @@ public class OPCClientInitialisationTest
 	@After
 	public void teardown()
 	{
-		testee.stop();
+		try {
+			testee.stop();
+		} 
+		catch (InterruptedException e) 
+		{
+			fail("could not stop OPCClient thread");
+		} 
+		catch (ExecutionException e) 
+		{
+			fail("could not stop OPCClient thread");
+		} 
+		catch (TimeoutException e) 
+		{
+			fail("could not stop OPCClient thread");
+		}
 	}
 
 	@Test

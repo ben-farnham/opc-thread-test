@@ -111,4 +111,10 @@ public abstract class OPCCommandBase implements OPCCommand
 	{
 		responseQueue.put(new OPCCommandResult(exception));
 	}
+	
+	@Override
+	public void reportSuccess(Object result) throws InterruptedException 
+	{
+		responseQueue.put(new OPCCommandResult(result));
+	}
 }

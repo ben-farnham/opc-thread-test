@@ -15,9 +15,8 @@ public class ReadIntCommand extends OPCCommandBase implements OPCCommand {
 	}
 
 	@Override
-	public void execute() throws OPCException, InterruptedException 
+	public Object execute() throws OPCException, InterruptedException 
 	{
-		Integer value = Integer.valueOf(getOpcApi().readInt(getOpcItemAddress()));
-		responseQueue.put(new OPCCommandResult(value));
+		return Integer.valueOf(getOpcApi().readInt(getOpcItemAddress()));
 	}
 }

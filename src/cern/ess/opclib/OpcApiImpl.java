@@ -1,5 +1,8 @@
 package cern.ess.opclib;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import cern.ess.opclib.OPC;
 
 class OpcApiImpl implements OpcApi
@@ -68,5 +71,11 @@ class OpcApiImpl implements OpcApi
 	public synchronized void writeString(String item, String val) throws OPCException 
 	{
 		OPC.writeString(item, val);
+	}
+
+	@Override
+	public int stop() throws InterruptedException, ExecutionException, TimeoutException 
+	{
+		throw new UnsupportedOperationException("not supported in this context - only thread based implementations support this (like OPCClient)");
 	}
 }
