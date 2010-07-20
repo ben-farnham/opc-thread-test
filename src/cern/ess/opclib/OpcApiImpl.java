@@ -1,9 +1,11 @@
 package cern.ess.opclib;
 
-class OpcApiImpl implements OpcApi 
+import cern.ess.opclib.OPC;
+
+class OpcApiImpl implements OpcApi
 {
 	@Override
-	public void init(String host, String server) throws OPCException 
+	public synchronized void init(String host, String server) throws OPCException 
 	{
 		OPC.init(host, server);		
 	}	

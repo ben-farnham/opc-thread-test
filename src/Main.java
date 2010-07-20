@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 
 public class Main {
 	
-	public static final String LOCAL_HOST_IP = ""; /*empty is localhost*/
+	public static final String LOCAL_HOST_IP = ""; //empty is localhost 
 	public static final String MATRIKON_OPC_SERVER = "Matrikon.OPC.Simulation";
 	
 	/**
@@ -22,19 +22,19 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		System.out.println("App started");
 		
-		final int nNumThreads = 5;		
+		final int nNumThreads = 20;		
 		
 		Collection<Callable<List<ErrorMessage>>> threads = new ArrayList<Callable<List<ErrorMessage>>>();
 		for(int i = 0; i < nNumThreads; i++)
 		{
-			/* Old skool - not working
-			threads.add(new OPCThread(LOCAL_HOST_IP, MATRIKON_OPC_SERVER, i));
-			*/
-			
+			// old skool
+			//threads.add(new OPCThread(LOCAL_HOST_IP, MATRIKON_OPC_SERVER, i));
+
+			// nu skool
 			threads.add(new ImprovedOpcThread(LOCAL_HOST_IP, MATRIKON_OPC_SERVER, i));
 		}
 		
-		ExecutorService executor = Executors.newFixedThreadPool(1);
+		ExecutorService executor = Executors.newFixedThreadPool(nNumThreads);
 		List<Future<List<ErrorMessage>>> results = executor.invokeAll(threads);
 		
 		for(int i=0; i<nNumThreads; i++)

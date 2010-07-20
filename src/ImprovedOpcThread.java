@@ -4,7 +4,7 @@ import java.util.concurrent.Callable;
 
 import cern.ess.opclib.OPCException;
 import cern.ess.opclib.OpcApiFactory;
-import ch.cern.opc.threadingSpike.OPCClient;
+import ch.ess.opclib.clientThread.OPCClient;
 
 public class ImprovedOpcThread implements Callable<List<ErrorMessage>> 
 {
@@ -20,7 +20,7 @@ public class ImprovedOpcThread implements Callable<List<ErrorMessage>>
 	private final String opcServer;
 	private final int id;
 	
-	static OPCClient theClient;
+	public static OPCClient theClient;
 	static
 	{
 		theClient = new OPCClient(new OpcApiFactory().createOpcApi());
