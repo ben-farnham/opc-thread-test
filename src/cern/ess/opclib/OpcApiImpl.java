@@ -52,25 +52,46 @@ class OpcApiImpl implements OpcApi
 	@Override
 	public synchronized void writeBoolean(String item, boolean val) throws OPCException 
 	{
-		OPC.writeBoolean(item, val);
+		if(OPC.readBoolean(item) != val)
+		{
+			OPC.writeBoolean(item, val);
+		}
 	}
 
 	@Override
 	public synchronized void writeFloat(String item, String type, float val) throws OPCException 
 	{
-		OPC.writeFloat(item, type, val);
+		if(OPC.readFloat(item) != val)
+		{
+			OPC.writeFloat(item, type, val);
+		}
 	}
 
 	@Override
 	public synchronized void writeInt(String item, String type, int val) throws OPCException 
 	{
-		OPC.writeInt(item, type, val);
+		if(OPC.readInt(item) != val)
+		{
+			OPC.writeInt(item, type, val);
+		}
 	}
 
 	@Override
 	public synchronized void writeString(String item, String val) throws OPCException 
 	{
-		OPC.writeString(item, val);
+		String currentValue = OPC.readString(item);
+
+		if(currentValue == null)
+		{
+			OPC.writeString(item, val);
+		}
+		else
+		{
+			if(!currentValue.equals(val))
+			{
+				OPC.writeString(item, val);
+			}
+		}
 	}
 
 	@Override
