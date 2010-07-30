@@ -11,7 +11,6 @@ import java.util.concurrent.TimeoutException;
 
 import static cern.ess.opclib.OPCClientInstance.theOPCClient;
 
-
 public class Main {
 	
 	public static final String LOCAL_HOST_IP = ""; //empty is localhost 
@@ -28,7 +27,7 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException 
 	{
 		System.out.println("App started");
-		
+
 		final int nNumThreads = 20;		
 		
 		Collection<Callable<List<ErrorMessage>>> threads = new ArrayList<Callable<List<ErrorMessage>>>();
@@ -62,5 +61,5 @@ public class Main {
 		executor.shutdown();
 		
 		System.out.println("Exiting.");
-	}	
+	}
 }

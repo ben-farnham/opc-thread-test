@@ -130,7 +130,7 @@ class OPCClient implements OpcApi
 			{
 				System.out.println("waiting for command...");
 				OPCCommand command = requestQueue.take();
-				System.out.println("command received, processing");
+				System.out.println("command received, "+command+", processing");
 				
 				if(!initialised && !command.isInitCommand())
 				{
